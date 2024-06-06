@@ -49,13 +49,16 @@ def split_file(input_file, chunk_size):
 # Handler for /start command
 @app.on_message(filters.command("start"))
 async def start_command(client, message):
-    logger.info("/start command received")
-    keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("Video Sample Generator", callback_data="video_sample_generator")],
-        [InlineKeyboardButton("Audio Trimmer", callback_data="audio_trimmer")],
-        [InlineKeyboardButton("Audio Merger", callback_data="audio_merger")]
-    ])
-    await message.reply("Please choose an option:", reply_markup=keyboard)
+    try:
+        logger.info("/start command received")
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("Video Sample Generator", callback_data="video_sample_generator")],
+            [InlineKeyboardButton("Audio Trimmer", callback_data="audio_trimmer")],
+            [InlineKeyboardButton("Audio Merger", callback_data="audio_merger")]
+        ])
+        await message.reply("Please choose an option:", reply_markup=keyboard)
+    except Exception as e:
+        logger.error(f"An error occurred in the start command handler: {e}")
 
 # Callback query handler
 @app.on_callback_query()

@@ -11,8 +11,8 @@ import random
 from asyncio import get_event_loop_policy, set_event_loop_policy, DefaultEventLoopPolicy
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from config.env file
+load_dotenv('config.env')
 
 # Set uvloop as the default event loop policy
 set_event_loop_policy(uvloop.EventLoopPolicy())

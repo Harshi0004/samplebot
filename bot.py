@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 # Apply nest_asyncio
-nest_asyncio.apply()
+ # nest_asyncio.apply()
 
 # Telegram API Credentials from environment variables
 api_id = int(os.getenv('API_ID'))

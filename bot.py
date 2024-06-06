@@ -32,6 +32,17 @@ bot_token = os.getenv('BOT_TOKEN')
 # Initialize Pyrogram Client
 app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
+async def send_restart_message():
+    try:
+        # Get information about the bot
+        bot_info = await app.get_me()
+        bot_chat_id = bot_info.id
+        # Replace with your desired restart message
+        await app.send_message(bot_chat_id, "Bot has been restarted!")
+    except Exception as e:
+        logger.error(f"Failed to send restart message: {e}")
+
+
 # Store message IDs for audio trimming and merging
 audio_message_ids = {}
 audio_files_to_merge = {}
@@ -323,6 +334,17 @@ async def handle_video(client, message):
             os.remove(file_path)
         if os.path.exists(output_file):
             os.remove(output_file)
+
+
+# Handle the bot's start
+async def on_startup():
+    logger.info("Starting the bot")
+    await send_restart_message()
+
+# Handle the bot's restart
+async def on_restart():
+    logger.info("Restarting the bot")
+    await send_restart_message()
 
 # Main function to start the bot
 async def main():

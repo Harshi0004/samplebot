@@ -2,3 +2,4 @@ pyrogram
 nest_asyncio
 uvloop
 python-dotenv
+tgcrypto

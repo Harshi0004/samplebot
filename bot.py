@@ -49,6 +49,7 @@ def split_file(input_file, chunk_size):
 # Handler for /start command
 @app.on_message(filters.command("start"))
 async def start_command(client, message):
+    logger.info("/start command received")
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("Video Sample Generator", callback_data="video_sample_generator")],
         [InlineKeyboardButton("Audio Trimmer", callback_data="audio_trimmer")],
@@ -57,21 +58,16 @@ async def start_command(client, message):
     await message.reply("Please choose an option:", reply_markup=keyboard)
 
 # Callback query handler
-@app.on_callback_query(filters.regex(r"video_sample_generator"))
-async def video_sample_generator(client, callback_query):
-    await callback_query.message.edit_text("Send a video file to generate a sample.")
-
-@app.on_callback_query(filters.regex(r"audio_trimmer"))
-async def audio_trimmer(client, callback_query):
-    user_id = callback_query.from_user.id
-    audio_trim_sessions[user_id] = {'file': None, 'start_time': None, 'end_time': None}
-    await callback_query.message.edit_text("Send an audio file to trim.")
-
-@app.on_callback_query(filters.regex(r"audio_merger"))
-async def audio_merger(client, callback_query):
-    user_id = callback_query.from_user.id
-    audio_files_to_merge[user_id] = {'num_files': None, 'received_files': []}
-    await callback_query.message.edit_text("How many audio files would you like to merge? Please provide a number.")
+@app.on_callback_query()
+async def callback_handler(client, callback_query):
+    logger.info("Callback query received")
+    data = callback_query.data
+    if data == "video_sample_generator":
+        await callback_query.message.edit_text("Send a video file to generate a sample.")
+    elif data == "audio_trimmer":
+        await callback_query.message.edit_text("Send an audio file to trim.")
+    elif data == "audio_merger":
+        await callback_query.message.edit_text("How many audio files would you like to merge? Please provide a number.")
 
 # Custom filter to exclude commands
 def exclude_commands(_, __, message):
@@ -328,6 +324,7 @@ async def handle_video(client, message):
 # Main function to start the bot
 async def main():
     try:
+        logger.info("Starting the bot")
         await app.start()
         logger.info("Bot is running. Waiting for messages...")
         while True:
@@ -335,7 +332,8 @@ async def main():
     except Exception as e:
         logger.exception(f"An error occurred: {e}")
     finally:
+        logger.info("Stopping the bot")
         await app.stop()
-
+     
 if __name__ == "__main__":
     asyncio.run(main())

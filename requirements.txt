@@ -1,0 +1,3 @@
+pyrogram
+nest_asyncio
+uvloop
